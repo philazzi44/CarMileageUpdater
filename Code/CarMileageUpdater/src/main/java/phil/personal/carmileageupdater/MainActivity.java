@@ -31,45 +31,55 @@ public class MainActivity extends Activity {
 
         int newMileage = Integer.parseInt(tboMileage.getText().toString());
 
-        Object objSpreadsheet = OpenSpreadsheet();
-
-        boolean result = UpdateSpreadsheet(objSpreadsheet, newMileage);
-
-        CloseSpreadsheet(objSpreadsheet);
-
-        if (result)
-        {
+        if (PostToPasteBin(newMileage))
             ShowSuccess();
-        }
         else
-        {
             ShowFailure();
+    }
+
+    private boolean PostToPasteBin(Integer newMileage)
+    {
+        try
+        {
+            String apiDevKey = "1130938b77f534523710589cc6ae42c1";
+            String apiUserKey = "ccd2b7b197c8cab9104fc6d4dc665939";
+            String apiOption = "paste";
+            String apiPasteName = "carmileage";
+            String apiPasteExpireDate = "1W";
+            String apiPastePrivate = "1"; // Unlisted
+            String apiPasteCode = newMileage.toString();
+            
+            URL url = new URL("http://pastebin.com/api/api_post.php"); 
+            String urlParameters = "api_dev_key=" + apiDevKey + 
+                                   "&api_user_key=" + apiUserKey +
+                                   "&api_option=" + apiOption +
+                                   "&api_paste_name=" + apiPasteName +
+                                   "&api_paste_expire_date=" + apiPasteExpireDate +
+                                   "&api_paste_private=" + apiPastePrivate +
+                                   "&api_paste_code=" + apiPasteCode;
+            
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();           
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+            connection.setInstanceFollowRedirects(false); 
+            connection.setRequestMethod("POST"); 
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded"); 
+            connection.setRequestProperty("charset", "utf-8");
+            connection.setRequestProperty("Content-Length", "" + Integer.toString(urlParameters.getBytes().length));
+            connection.setUseCaches (false);
+            
+            DataOutputStream wr = new DataOutputStream(connection.getOutputStream ());
+            wr.writeBytes(urlParameters);
+            wr.flush();
+            wr.close();
+            connection.disconnect();
+            return true;
         }
-    }
-
-    private Object OpenSpreadsheet()
-    {
-        return null;
-    }
-
-    private void Authenticate()
-    {
-        AccountManager am = AccountManager.get(activity);
-        am.getAuthToken(am.getAccounts())[0],
-                "ouath2:" + DriveScopes.DRIVE,
-                new Bundle(),
-                true,
-                new OnTokenAcquired(),
-                null);
-    }
-    private boolean UpdateSpreadsheet(Object objSpreadsheet, int newMileage)
-    {
-        return true;
-    }
-
-    private void CloseSpreadsheet(Object objSpreadsheet)
-    {
-
+        catch (Exception e)
+        {
+             e.printStackTrace();
+             return false;
+        }
     }
 
     private void ShowSuccess()
