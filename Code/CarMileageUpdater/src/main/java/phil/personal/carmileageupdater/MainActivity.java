@@ -1,6 +1,5 @@
 package phil.personal.carmileageupdater;
 
-import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -9,6 +8,10 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import java.io.DataOutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class MainActivity extends Activity {
 
@@ -41,6 +44,7 @@ public class MainActivity extends Activity {
     {
         try
         {
+            // see http://stackoverflow.com/questions/6343166/android-os-networkonmainthreadexception for async task fix
             String apiDevKey = "1130938b77f534523710589cc6ae42c1";
             String apiUserKey = "ccd2b7b197c8cab9104fc6d4dc665939";
             String apiOption = "paste";
@@ -49,7 +53,7 @@ public class MainActivity extends Activity {
             String apiPastePrivate = "1"; // Unlisted
             String apiPasteCode = newMileage.toString();
             
-            URL url = new URL("http://pastebin.com/api/api_post.php"); 
+            URL url = new URL("http://pastebin.com/api/api_post.php");
             String urlParameters = "api_dev_key=" + apiDevKey + 
                                    "&api_user_key=" + apiUserKey +
                                    "&api_option=" + apiOption +
@@ -58,7 +62,7 @@ public class MainActivity extends Activity {
                                    "&api_paste_private=" + apiPastePrivate +
                                    "&api_paste_code=" + apiPasteCode;
             
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();           
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setDoInput(true);
             connection.setInstanceFollowRedirects(false); 
