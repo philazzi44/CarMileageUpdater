@@ -16,6 +16,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+// All passwords for the keystore are "carmileage"
 public class MainActivity extends Activity {
 
     @Override
